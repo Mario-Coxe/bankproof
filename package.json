@@ -1,0 +1,31 @@
+{
+  "name": "bankproof",
+  "version": "0.1.0",
+  "description": "Minimal, extensible bank proof validation library for Node.js/TypeScript with PDF/OCR extraction.",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo \"No linter configured yet\"",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pdf-parse": "^1.1.1",
+    "tesseract.js": "^4.1.1",
+    "undici": "^6.19.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@types/pdf-parse": "^1.1.1",
+    "vitest": "^1.2.0",
+    "typescript": "^5.3.3"
+  }
+}
