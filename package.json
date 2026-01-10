@@ -12,20 +12,26 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo \"No linter configured yet\"",
-    "test": "vitest run"
+    "test": "vitest run",
+    "dev": "ts-node src/index.ts"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
     "pdf-parse": "^1.1.1",
     "tesseract.js": "^4.1.1",
+    "ts-node": "^10.9.2",
     "undici": "^6.19.6"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
     "@types/pdf-parse": "^1.1.1",
-    "vitest": "^1.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0"
   }
 }

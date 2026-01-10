@@ -20,16 +20,17 @@ You need system dependencies for `tesseract.js` if running OCR (Tesseract runtim
 ## Quick start
 
 ```ts
-import { BankProof, baiProvider } from "bankproof";
+import { BankProof, baiProvider, createConsoleLogger } from "bankproof";
 
 // Manual input
-const result = await BankProof.validate({ chave: "414979709", pin: "86612413" }, baiProvider);
+const logger = createConsoleLogger("info");
+const result = await BankProof.validate({ chave: "414979709", pin: "86612413" }, baiProvider, { logger });
 // -> { status: "CONFIRMED" | "INVALID" | "ERROR", provider: "BAI", message?: string }
 
 // PDF / Imagem
 import { readFileSync } from "fs";
 const file = readFileSync("comprovativo.pdf");
-const pdfResult = await BankProof.extractAndValidate(file, baiProvider);
+const pdfResult = await BankProof.extractAndValidate(file, baiProvider, { logger });
 ```
 
 ## API

@@ -1,5 +1,15 @@
 export type ValidationStatus = "CONFIRMED" | "INVALID" | "ERROR";
 
+export type LogLevel = "debug" | "info" | "warn" | "error" | "silent";
+
+export interface Logger {
+  level: LogLevel;
+  debug(message: string, meta?: Record<string, unknown>): void;
+  info(message: string, meta?: Record<string, unknown>): void;
+  warn(message: string, meta?: Record<string, unknown>): void;
+  error(message: string, meta?: Record<string, unknown>): void;
+}
+
 export interface ValidationResult {
   status: ValidationStatus;
   provider: string;
@@ -10,6 +20,7 @@ export interface ValidationResult {
 export interface ProviderContext {
   signal?: AbortSignal;
   timeoutMs?: number;
+  logger?: Logger;
 }
 
 export interface ProviderPatterns {

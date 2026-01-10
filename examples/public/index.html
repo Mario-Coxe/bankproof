@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BankProof Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; max-width: 720px; }
+    h1 { margin-bottom: 0.5rem; }
+    .card { border: 1px solid #ddd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    label { display: block; margin: 0.5rem 0 0.25rem; }
+    input, button { padding: 0.5rem; font-size: 1rem; }
+    button { cursor: pointer; }
+    pre { background: #f7f7f7; padding: 0.75rem; border-radius: 6px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>BankProof Demo</h1>
+  <p>Teste manual (chave/pin) ou upload de PDF/Imagem. Usa provider BAI.</p>
+
+  <div class="card">
+    <h2>Manual: chave + pin</h2>
+    <label for="chave">Chave</label>
+    <input id="chave" type="text" placeholder="414979709" />
+    <label for="pin">PIN</label>
+    <input id="pin" type="text" placeholder="86612413" />
+    <div style="margin-top: 0.75rem;">
+      <button id="btn-manual">Validar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Upload PDF/Imagem</h2>
+    <input id="file" type="file" accept="application/pdf,image/*" />
+    <div style="margin-top: 0.75rem;">
+      <button id="btn-upload">Enviar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Resultado</h2>
+    <pre id="output">Aguardando...</pre>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+
+    function show(data) {
+      output.textContent = JSON.stringify(data, null, 2);
+    }
+
+    document.getElementById('btn-manual').addEventListener('click', async () => {
+      const chave = document.getElementById('chave').value;
+      const pin = document.getElementById('pin').value;
+      show({ loading: true });
+      const res = await fetch('/api/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chave, pin })
+      });
+      const data = await res.json();
+      show(data);
+    });
+
+    document.getElementById('btn-upload').addEventListener('click', async () => {
+      const fileInput = document.getElementById('file');
+      if (!fileInput.files.length) {
+        return alert('Selecione um PDF ou imagem.');
+      }
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+      show({ loading: true });
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      show(data);
+    });
+  </script>
+</body>
+</html>

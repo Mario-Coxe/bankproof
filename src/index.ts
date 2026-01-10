@@ -2,6 +2,7 @@ import { extractTextFromPdf } from "./services/pdf";
 import { extractTextWithOcr } from "./services/ocr";
 import { extractDataFromText } from "./utils/parse";
 import { isPdfBuffer, toBuffer } from "./utils/file";
+import { resolveLogger } from "./logger";
 import {
   ExtractAndValidateOptions,
   Provider,
@@ -11,7 +12,9 @@ import {
 
 export class BankProof {
   static async validate(input: ValidateInput, provider: Provider, options?: ExtractAndValidateOptions): Promise<ValidationResult> {
+    const logger = resolveLogger(options?.logger);
     if (!input?.chave || !input?.pin) {
+      logger.warn("MISSING_DATA", { provider: provider.name });
       return {
         status: "INVALID",
         provider: provider.name,
@@ -19,7 +22,7 @@ export class BankProof {
       };
     }
 
-    return provider.validate(input.chave, input.pin, options);
+    return provider.validate(input.chave, input.pin, { ...options, logger });
   }
 
   static async extractAndValidate(
@@ -27,6 +30,7 @@ export class BankProof {
     provider: Provider,
     options?: ExtractAndValidateOptions
   ): Promise<ValidationResult> {
+    const logger = resolveLogger(options?.logger);
     const buffer = toBuffer(file);
 
     let text = "";
@@ -44,6 +48,7 @@ export class BankProof {
     const extracted = extractDataFromText(text, provider.patterns);
 
     if (!extracted.chave || !extracted.pin) {
+      logger.warn("MISSING_DATA", { provider: provider.name, source: pdfFile ? "pdf" : "ocr" });
       return {
         status: "INVALID",
         provider: provider.name,
@@ -51,9 +56,10 @@ export class BankProof {
       };
     }
 
-    return provider.validate(extracted.chave, extracted.pin, options);
+    return provider.validate(extracted.chave, extracted.pin, { ...options, logger });
   }
 }
 
 export * from "./providers";
 export * from "./types";
+export * from "./logger";
