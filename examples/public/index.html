@@ -16,10 +16,14 @@
 </head>
 <body>
   <h1>BankProof Demo</h1>
-  <p>Teste manual (chave/pin) ou upload de PDF/Imagem. Usa provider BAI.</p>
+  <p>Teste manual (chave/pin) ou upload de PDF/Imagem. Escolha o provider.</p>
 
   <div class="card">
     <h2>Manual: chave + pin</h2>
+    <label for="provider-manual">Provider</label>
+    <select id="provider-manual">
+      <option value="BAI">BAI</option>
+    </select>
     <label for="chave">Chave</label>
     <input id="chave" type="text" placeholder="414979709" />
     <label for="pin">PIN</label>
@@ -31,6 +35,10 @@
 
   <div class="card">
     <h2>Upload PDF/Imagem</h2>
+    <label for="provider-upload">Provider</label>
+    <select id="provider-upload">
+      <option value="BAI">BAI</option>
+    </select>
     <input id="file" type="file" accept="application/pdf,image/*" />
     <div style="margin-top: 0.75rem;">
       <button id="btn-upload">Enviar</button>
@@ -53,10 +61,11 @@
       const chave = document.getElementById('chave').value;
       const pin = document.getElementById('pin').value;
       show({ loading: true });
+      const provider = document.getElementById('provider-manual').value;
       const res = await fetch('/api/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chave, pin })
+        body: JSON.stringify({ chave, pin, provider })
       });
       const data = await res.json();
       show(data);
@@ -69,8 +78,9 @@
       }
       const formData = new FormData();
       formData.append('file', fileInput.files[0]);
+      const provider = document.getElementById('provider-upload').value;
       show({ loading: true });
-      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const res = await fetch(`/api/upload?provider=${encodeURIComponent(provider)}`, { method: 'POST', body: formData });
       const data = await res.json();
       show(data);
     });

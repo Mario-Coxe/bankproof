@@ -1,14 +1,6 @@
+import type { Logger } from "./logger";
+
 export type ValidationStatus = "CONFIRMED" | "INVALID" | "ERROR";
-
-export type LogLevel = "debug" | "info" | "warn" | "error" | "silent";
-
-export interface Logger {
-  level: LogLevel;
-  debug(message: string, meta?: Record<string, unknown>): void;
-  info(message: string, meta?: Record<string, unknown>): void;
-  warn(message: string, meta?: Record<string, unknown>): void;
-  error(message: string, meta?: Record<string, unknown>): void;
-}
 
 export interface ValidationResult {
   status: ValidationStatus;
