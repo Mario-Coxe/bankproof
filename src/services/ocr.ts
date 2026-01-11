@@ -6,7 +6,6 @@ export async function extractTextWithOcr(buffer: Buffer, language = "eng"): Prom
     const text = data.text || "";
     return text;
   } catch (error) {
-    // Silent fail but can be logged if logger is passed
     return "";
   }
 }

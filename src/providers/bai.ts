@@ -44,16 +44,16 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
     VK0001: vk0001
   };
 
-  logger.debug("BAI_REQUEST", {
-    endpoint: BAI_ENDPOINT,
-    payloadKeys: Object.keys(payload),
-    base64Lengths: {
-      VR0001: payload.VR0001.length,
-      VK0001: payload.VK0001.length
-    },
-    payload,
-    timeoutMs: context?.timeoutMs ?? DEFAULT_TIMEOUT_MS
-  });
+  // logger.debug("BAI_REQUEST", {
+  //   endpoint: BAI_ENDPOINT,
+  //   payloadKeys: Object.keys(payload),
+  //   base64Lengths: {
+  //     VR0001: payload.VR0001.length,
+  //     VK0001: payload.VK0001.length
+  //   },
+  //   payload,
+  //   timeoutMs: context?.timeoutMs ?? DEFAULT_TIMEOUT_MS
+  // });
 
   const controller = context?.signal ? undefined : new AbortController();
   const signal = context?.signal ?? controller?.signal;
@@ -79,11 +79,11 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
       ? Boolean((response as Record<string, unknown>).error)
       : false;
 
-    logger.debug("BAI_RESPONSE", {
-      statusCode,
-      hasErrorFlag: errorFlag,
-      message
-    });
+    // logger.debug("BAI_RESPONSE", {
+    //   statusCode,
+    //   hasErrorFlag: errorFlag,
+    //   message
+    // });
 
     // Treat server errors as ERROR, not CONFIRMED
     if (statusCode >= 500) {
@@ -112,7 +112,7 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
     // Heuristic: confirmed only if no error flag and 2xx
     const confirmed = !errorFlag;
 
-    logger.debug("BAI_DECISION", { confirmed, statusCode, errorFlag });
+    // logger.debug("BAI_DECISION", { confirmed, statusCode, errorFlag });
 
     return {
       status: confirmed ? "CONFIRMED" : "INVALID",

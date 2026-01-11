@@ -74,7 +74,7 @@ export class BankProof {
       chaveB64x2: Buffer.from(Buffer.from(extracted.chave, "utf8").toString("base64"), "utf8").toString("base64"),
       pinB64x2: Buffer.from(Buffer.from(extracted.pin, "utf8").toString("base64"), "utf8").toString("base64")
     };
-    logger.info("EXTRACTED_DATA", logPayload);
+    //logger.info("EXTRACTED_DATA", logPayload);
 
     return provider.validate(extracted.chave, extracted.pin, { ...options, logger });
   }
