@@ -20,7 +20,6 @@ function resolveProvider(name?: string): Provider | undefined {
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Manual validation (chave + pin)
 app.post("/api/validate", async (req, res) => {
   const { chave, pin, provider: providerName } = req.body || {};
   const provider = resolveProvider(providerName);
@@ -40,7 +39,6 @@ app.post("/api/validate", async (req, res) => {
   }
 });
 
-// File upload validation (PDF/Image)
 app.post("/api/upload", upload.single("file"), async (req, res) => {
   const providerName = req.query.provider as string | undefined;
   const provider = resolveProvider(providerName);

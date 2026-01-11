@@ -3,8 +3,10 @@ import pdf from "pdf-parse";
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   try {
     const parsed = await pdf(buffer);
-    return parsed.text || "";
-  } catch {
+    const text = parsed.text || "";
+    return text;
+  } catch (error) {
+    // Silent fail but can be logged if logger is passed
     return "";
   }
 }

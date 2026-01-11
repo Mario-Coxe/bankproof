@@ -3,8 +3,10 @@ import Tesseract from "tesseract.js";
 export async function extractTextWithOcr(buffer: Buffer, language = "eng"): Promise<string> {
   try {
     const { data } = await Tesseract.recognize(buffer, language);
-    return data.text || "";
-  } catch {
+    const text = data.text || "";
+    return text;
+  } catch (error) {
+    // Silent fail but can be logged if logger is passed
     return "";
   }
 }

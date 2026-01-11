@@ -13,7 +13,6 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
   const digitsChave = normalizedChave.replace(/\D+/g, "");
   const digitsPin = normalizedPin.replace(/\D+/g, "");
 
-  // BAI expects both chave and PIN as 9-digit strings
   const chaveValid = /^\d{1,9}$/.test(digitsChave);
   const pinValid = /^\d{1,9}$/.test(digitsPin);
 
@@ -30,17 +29,19 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
     };
   }
 
-  // Pad both to 9 digits with leading zeros
   const chave9 = digitsChave.padStart(9, "0");
   const pin9 = digitsPin.padStart(9, "0");
 
   const pinB64 = Buffer.from(pin9, "utf8").toString("base64");
   const chaveB64 = Buffer.from(chave9, "utf8").toString("base64");
 
-  // BAI appears to expect the values double-base64-encoded (base64 of the base64 string)
+  // Double-encode (base64 of the base64 string) as required by BAI
+  const vr0001 = Buffer.from(pinB64, "utf8").toString("base64");
+  const vk0001 = Buffer.from(chaveB64, "utf8").toString("base64");
+
   const payload = {
-    VR0001: Buffer.from(pinB64, "utf8").toString("base64"),
-    VK0001: Buffer.from(chaveB64, "utf8").toString("base64")
+    VR0001: vr0001,
+    VK0001: vk0001
   };
 
   logger.debug("BAI_REQUEST", {
@@ -50,6 +51,7 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
       VR0001: payload.VR0001.length,
       VK0001: payload.VK0001.length
     },
+    payload,
     timeoutMs: context?.timeoutMs ?? DEFAULT_TIMEOUT_MS
   });
 
@@ -137,8 +139,10 @@ async function baiValidate(chave: string, pin: string, context?: ProviderContext
 export const baiProvider: Provider = {
   name: "BAI",
   patterns: {
-    chave: /\b\d{9}\b/,
-    pin: /\b\d{8}\b/
+    // Match 9 digits for chave with optional label/separator
+    chave: /(?:chave|key|codigo|code)[:\s]*([0-9\s]{9,})|\b([0-9]{9})\b/i,
+    // Match 8+ digits for PIN with optional label/separator
+    pin: /(?:pin|senha|password|codigo)[:\s]*([0-9\s]{8,})|\b([0-9]{8,10})\b/i
   },
   validate: baiValidate
 };
