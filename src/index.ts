@@ -38,16 +38,19 @@ export class BankProof {
     const logger = resolveLogger(options?.logger);
     const buffer = toBuffer(file);
 
+    const pdfExtractor = options?.extract?.pdfText ?? extractTextFromPdf;
+    const ocrExtractor = options?.extract?.ocrText ?? extractTextWithOcr;
+
     let text = "";
     const pdfFile = isPdfBuffer(buffer);
 
     if (pdfFile) {
-      text = await extractTextFromPdf(buffer);
+      text = await pdfExtractor(buffer);
       if (!text.trim()) {
-        text = await extractTextWithOcr(buffer, options?.language);
+        text = await ocrExtractor(buffer, options?.language);
       }
     } else {
-      text = await extractTextWithOcr(buffer, options?.language);
+      text = await ocrExtractor(buffer, options?.language);
     }
 
     const extracted = extractDataFromText(text, provider.patterns);
@@ -71,7 +74,7 @@ export class BankProof {
       chaveB64x2: Buffer.from(Buffer.from(extracted.chave, "utf8").toString("base64"), "utf8").toString("base64"),
       pinB64x2: Buffer.from(Buffer.from(extracted.pin, "utf8").toString("base64"), "utf8").toString("base64")
     };
-    //logger.info("EXTRACTED_DATA", logPayload);
+    logger.info("EXTRACTED_DATA", logPayload);
 
     return provider.validate(extracted.chave, extracted.pin, { ...options, logger });
   }

@@ -35,6 +35,10 @@ export interface ExtractedData {
 
 export interface ExtractAndValidateOptions extends ProviderContext {
   language?: string;
+  extract?: {
+    pdfText?: (buffer: Buffer) => Promise<string>;
+    ocrText?: (buffer: Buffer, language?: string) => Promise<string>;
+  };
 }
 
 export interface ValidateInput {
