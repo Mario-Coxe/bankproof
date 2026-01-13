@@ -6,11 +6,37 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mario-Coxe/bankproof.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mario-Coxe/bankproof/issues"
+  },
+  "homepage": "https://github.com/Mario-Coxe/bankproof#readme",
+  "keywords": [
+    "bank",
+    "proof",
+    "ocr",
+    "pdf",
+    "validation",
+    "bai"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "npm run build && npm test",
     "lint": "echo \"No linter configured yet\"",
     "test": "vitest run",
     "dev": "ts-node src/index.ts"
@@ -19,17 +45,17 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@types/express": "^5.0.6",
-    "@types/multer": "^2.0.0",
-    "express": "^5.2.1",
-    "multer": "^2.0.2",
     "pdf-parse": "^1.1.1",
     "tesseract.js": "^4.1.1",
-    "ts-node": "^10.9.2",
     "undici": "^6.19.6"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
     "@types/node": "^20.10.6",
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "ts-node": "^10.9.2",
     "@types/pdf-parse": "^1.1.1",
     "typescript": "^5.3.3",
     "vitest": "^1.2.0"
